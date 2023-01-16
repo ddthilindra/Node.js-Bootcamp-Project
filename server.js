@@ -32,7 +32,7 @@ const server = http.createServer((req, res) => {
   //   res.setHeader('Content-Type', 'application/json');
   //   res.setHeader('X-Powerd-By', 'Node.js');
 
-  res.writeHead(404, {
+  res.writeHead(200, {
     'Content-Type': 'application/json',
     'X-Powerd-By': 'Node.js',
   });
