@@ -1,17 +1,18 @@
 {
   "name": "nodejs",
   "version": "1.0.0",
-  "description": "",
+  "description": "node backend",
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon server.js"
+    "start": "node server",
+    "dev": "nodemon server"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/ddthilindra/Node.js-Masterclass-Course.git"
   },
-  "author": "",
+  "author": "Deshitha Thilindra",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/ddthilindra/Node.js-Masterclass-Course/issues"
@@ -19,5 +20,9 @@
   "homepage": "https://github.com/ddthilindra/Node.js-Masterclass-Course#readme",
   "devDependencies": {
     "nodemon": "^2.0.20"
+  },
+  "dependencies": {
+    "dotenv": "^16.0.3",
+    "express": "^4.18.2"
   }
 }
