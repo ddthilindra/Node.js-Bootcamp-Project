@@ -3,6 +3,7 @@ const dotenv = require('dotenv');
 const indexRoutes= require('./routes/index')
 const logger=require('./middleware/logger')
 const morgan = require('morgan')
+const errorHandler = require('./middleware/error');
 const connectDB = require('./config/db');
 
 // Load env vars
@@ -25,6 +26,9 @@ if(process.env.NODE_ENV == 'development'){
 
 // Mount routers
 app.use('/',indexRoutes)
+
+// Handle the 500 html error with json
+app.use(errorHandler)
 
 const PORT = process.env.PORT || 5000;
 
