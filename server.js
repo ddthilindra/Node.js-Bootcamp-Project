@@ -3,10 +3,12 @@ const dotenv = require('dotenv');
 const indexRoutes= require('./routes/index')
 const logger=require('./middleware/logger')
 const morgan = require('morgan')
+const connectDB = require('./config/db');
 
-// Load env
+// Load env vars
 dotenv.config();
-
+// Connect to database
+connectDB()
 const app = express();
 
 app.get('/',(req,res)=>{
