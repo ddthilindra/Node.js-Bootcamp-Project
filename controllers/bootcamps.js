@@ -17,29 +17,6 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
   });
 });
 
-// @desc    Get all bootcamps
-// @route   GET /bootcamps
-// @acess   Public
-exports.getBootcampsAdvFltr = asyncHandler(async (req, res, next) => {
-  let query
-
-  let queryStr =JSON.stringify(req.query)
-  
-  queryStr=queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g,match=>`$${match}`)
-  
-  query=Bootcamp.find(JSON.parse(queryStr))
-  console.log(queryStr)
-  
-  const bootcamps = await query
-
-  res.status(200).json({
-    success: true,
-    msg: 'Show all bootcamps',
-    count: bootcamps.length,
-    data: bootcamps,
-  });
-});
-
 // @desc    Get single bootcamp
 // @route   GET /bootcamps/:id
 // @acess   Public
@@ -134,8 +111,84 @@ exports.getBootcampsInRadius = asyncHandler(async (req, res, next) => {
   // }
   res.status(200).json({
     success: true,
-    count:bootcamp.length,
+    count: bootcamp.length,
     // msg: `Delete bootcamp ${req.params.id}`,
     data: bootcamp,
+  });
+});
+
+// @desc    Get all bootcamps with advance filtering
+// @route   GET /bootcamps/advfltr?careers[in]=Business
+// @acess   Public
+exports.getBootcampsAdvFltr = asyncHandler(async (req, res, next) => {
+  let query;
+
+  // Create query string
+  let queryStr = JSON.stringify(req.query);
+
+  // Create operators ($gt,$gte,etc)
+  queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g,(match) => `$${match}`);
+
+  // Finding resource
+  query = Bootcamp.find(JSON.parse(queryStr));
+
+  // Execute query
+  const bootcamps = await query;
+
+  res.status(200).json({
+    success: true,
+    msg: 'Show all bootcamps',
+    count: bootcamps.length,
+    data: bootcamps,
+  });
+});
+
+// @desc    Get all bootcamps with select and sorting
+// @route   GET /bootcamps/slct/srt?select=name,description&sort=name
+// @acess   Public
+exports.getBootcampsSelctSrt = asyncHandler(async (req, res, next) => {
+  let query;
+
+  // Copy req.query
+  const reqQuery = { ...req.query };
+
+  // Fields to execute
+  // const removeFields=['select']
+  const removeFields=['select','sort']
+
+  //Loop over removeFields and delete them from reQuery
+  removeFields.forEach(param=>delete reqQuery[param])
+
+  // Create query string
+  let queryStr = JSON.stringify(req.query);
+
+  // Create operators ($gt,$gte,etc)
+  queryStr = queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g,(match) => `$${match}`);
+
+  // Finding resource
+  query = Bootcamp.find(JSON.parse(queryStr));
+
+  // Select Fields
+  if(req.query.select){
+    const fields=req.query.select.split(',').join(' ')
+    query = query.select(fields)
+  }
+
+  // Sort
+  if(req.query.sort){
+    const sortBy=req.query.sort.split(',').join(' ')
+    query = query.sort(sortBy)
+  }else{
+    query = query.sort('-createdAt')
+  }
+
+  // Execute query
+  const bootcamps = await query;
+
+  res.status(200).json({
+    success: true,
+    msg: 'Show all bootcamps',
+    count: bootcamps.length,
+    data: bootcamps,
   });
 });

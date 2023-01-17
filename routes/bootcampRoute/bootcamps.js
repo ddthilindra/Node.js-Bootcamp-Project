@@ -11,5 +11,7 @@ router.delete('/:id',bootcampsController.deleteBootcamp)
 router.get('/radius/:zipcode/:distance',bootcampsController.getBootcampsInRadius)
 // Advanced Filter
 router.get('/advfltr',bootcampsController.getBootcampsAdvFltr)
+// Advanced Filter
+router.get('/slct/srt',bootcampsController.getBootcampsSelctSrt)
 
 module.exports=router
