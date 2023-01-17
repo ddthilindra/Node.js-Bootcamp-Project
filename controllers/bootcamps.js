@@ -17,6 +17,29 @@ exports.getBootcamps = asyncHandler(async (req, res, next) => {
   });
 });
 
+// @desc    Get all bootcamps
+// @route   GET /bootcamps
+// @acess   Public
+exports.getBootcampsAdvFltr = asyncHandler(async (req, res, next) => {
+  let query
+
+  let queryStr =JSON.stringify(req.query)
+  
+  queryStr=queryStr.replace(/\b(gt|gte|lt|lte|in)\b/g,match=>`$${match}`)
+  
+  query=Bootcamp.find(JSON.parse(queryStr))
+  console.log(queryStr)
+  
+  const bootcamps = await query
+
+  res.status(200).json({
+    success: true,
+    msg: 'Show all bootcamps',
+    count: bootcamps.length,
+    data: bootcamps,
+  });
+});
+
 // @desc    Get single bootcamp
 // @route   GET /bootcamps/:id
 // @acess   Public
