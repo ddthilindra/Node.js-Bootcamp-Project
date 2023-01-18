@@ -13,5 +13,7 @@ router.get('/radius/:zipcode/:distance',bootcampsController.getBootcampsInRadius
 router.get('/advfltr',bootcampsController.getBootcampsAdvFltr)
 // Advanced Filter
 router.get('/slct/srt',bootcampsController.getBootcampsSelctSrt)
+// Pagination
+router.get('/page/pagination',bootcampsController.getBootcampsPagination)
 
 module.exports=router
