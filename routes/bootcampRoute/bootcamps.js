@@ -2,6 +2,11 @@ const express=require('express')
 const bootcampsController = require('../../controllers/bootcamps')
 const router=express.Router()
 
+// Include other resourse routers
+const courseRouter=require('../courseRoute/course')
+// Re-route into other resourse router
+router.use('/:bootcampId/courses',courseRouter)
+
 router.get('/',bootcampsController.getBootcamps)
 router.post('/',bootcampsController.createBootcamp)
 router.get('/:id',bootcampsController.getBootcamp)
