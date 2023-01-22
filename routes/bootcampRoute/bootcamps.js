@@ -1,6 +1,7 @@
 const express=require('express')
 const bootcampsController = require('../../controllers/bootcamps')
 const router=express.Router()
+const authMiddleware = require('../../middleware/auth')
 
 // Include other resourse routers
 const courseRouter=require('../courseRoute/course')
@@ -12,11 +13,11 @@ const Bootcamp = require('../../models/bootcamps')
 const advancedResults = require('../../middleware/advancedResult')
 
 router.get('/',advancedResults(Bootcamp,'courses'),bootcampsController.getBootcamps)
-router.post('/',bootcampsController.createBootcamp)
+router.post('/', authMiddleware.protect,bootcampsController.createBootcamp)
 router.get('/:id',bootcampsController.getBootcamp)
-router.put('/:id',bootcampsController.updateBootcamp)
-router.delete('/:id',bootcampsController.deleteBootcamp)
-router.put('/:id/photo',bootcampsController.bootcampPhotoUpload)
+router.put('/:id', authMiddleware.protect,bootcampsController.updateBootcamp)
+router.delete('/:id', authMiddleware.protect,bootcampsController.deleteBootcamp)
+router.put('/:id/photo', authMiddleware.protect,bootcampsController.bootcampPhotoUpload)
 
 
 router.get('/radius/:zipcode/:distance',bootcampsController.getBootcampsInRadius)
