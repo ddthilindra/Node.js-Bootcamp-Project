@@ -12,6 +12,8 @@ router.post('/',bootcampsController.createBootcamp)
 router.get('/:id',bootcampsController.getBootcamp)
 router.put('/:id',bootcampsController.updateBootcamp)
 router.delete('/:id',bootcampsController.deleteBootcamp)
+router.put('/:id/photo',bootcampsController.bootcampPhotoUpload)
+
 
 router.get('/radius/:zipcode/:distance',bootcampsController.getBootcampsInRadius)
 // Advanced Filter
