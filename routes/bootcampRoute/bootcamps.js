@@ -13,11 +13,11 @@ const Bootcamp = require('../../models/bootcamps')
 const advancedResults = require('../../middleware/advancedResult')
 
 router.get('/',advancedResults(Bootcamp,'courses'),bootcampsController.getBootcamps)
-router.post('/', authMiddleware.protect,bootcampsController.createBootcamp)
+router.post('/', authMiddleware.protect, authMiddleware.authorize('publisher','admin'), bootcampsController.createBootcamp)
 router.get('/:id',bootcampsController.getBootcamp)
-router.put('/:id', authMiddleware.protect,bootcampsController.updateBootcamp)
-router.delete('/:id', authMiddleware.protect,bootcampsController.deleteBootcamp)
-router.put('/:id/photo', authMiddleware.protect,bootcampsController.bootcampPhotoUpload)
+router.put('/:id', authMiddleware.protect, authMiddleware.authorize('publisher','admin'), bootcampsController.updateBootcamp)
+router.delete('/:id', authMiddleware.protect, authMiddleware.authorize('publisher','admin'), bootcampsController.deleteBootcamp)
+router.put('/:id/photo', authMiddleware.protect, authMiddleware.authorize('publisher','admin'), bootcampsController.bootcampPhotoUpload)
 
 
 router.get('/radius/:zipcode/:distance',bootcampsController.getBootcampsInRadius)
