@@ -30,7 +30,8 @@ const importData = async () => {
     // await Review.deleteMany();
 
     await Bootcamp.insertMany(bootcamps);
-    // await Course.insertMany(courses);
+    await Course.insertMany(courses);
+    await User.insertMany(users);
 
     console.log('Data Imported!');
     process.exit();
