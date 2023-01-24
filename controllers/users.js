@@ -76,6 +76,43 @@ exports.getMe = asyncHandler(async (req, res, next) => {
   });
 });
 
+// @desc    Update user details
+// @route   PUT /user/updatedetails
+// @acess   Private
+exports.updateDetails = asyncHandler(async (req, res, next) => {
+  const fieldsToUpdate = {
+    name: req.body.name,
+    email: req.body.email,
+  };
+  const user = await User.findByIdAndUpdate(req.user.id, fieldsToUpdate, {
+    new: true,
+    runValidators: true,
+  });
+
+  res.status(200).json({
+    success: true,
+    data: user,
+  });
+});
+
+// @desc    Update password | current password & new password
+// @route   POST /user/updatepassword
+// @acess   Private
+exports.updatePassword = asyncHandler(async (req, res, next) => {
+  const user = await User.findById(req.user.id).select('+password');
+
+  console.log(user)
+  // Check current password
+  if (!(await user.matchPassword(req.body.currentPassword))) {
+    return next(new ErrorResponse('Password is incurrect', 401));
+  }
+
+  user.password = req.body.newPassword;
+  await user.save();
+
+  sendTokenResponse(user, 200, res);
+});
+
 // @desc    Forgot password
 // @route   POST /user/forgotpassword
 // @acess   Public
@@ -139,15 +176,15 @@ exports.resetPassword = asyncHandler(async (req, res, next) => {
     resetPasswordExpire: { $gt: Date.now() },
   });
 
-  if(!user){
+  if (!user) {
     return next(new ErrorResponse('Invalid token', 400));
   }
 
   // Set the new password
-  user.password=req.body.password
-  user.resetPasswordToken=undefined
-  user.resetPasswordExpire=undefined
-  await user.save()
+  user.password = req.body.password;
+  user.resetPasswordToken = undefined;
+  user.resetPasswordExpire = undefined;
+  await user.save();
 
   sendTokenResponse(user, 200, res);
 });
