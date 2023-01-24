@@ -10,7 +10,7 @@ const advancedResults = require('../../middleware/advancedResult')
 router.get('/',advancedResults(Review,{path:'bootcamp',select:'name description'}),reviewController.getReviews)
 router.get('/:id',reviewController.getReview)
 router.post('/', authMiddleware.protect, authMiddleware.authorize('user','admin'), reviewController.addReview)
-// router.put('/:id', authMiddleware.protect, authMiddleware.authorize('publisher','admin'), reviewController.updatereview)
-// router.delete('/:id', authMiddleware.protect, authMiddleware.authorize('publisher','admin'), reviewController.deletereview)
+router.put('/:id', authMiddleware.protect, authMiddleware.authorize('user','admin'), reviewController.updateReview)
+router.delete('/:id', authMiddleware.protect, authMiddleware.authorize('user','admin'), reviewController.deleteReview)
 
 module.exports = router
