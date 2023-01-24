@@ -5,8 +5,10 @@ const authMiddleware = require('../../middleware/auth')
 
 // Include other resourse routers
 const courseRouter=require('../courseRoute/course')
+const reviewRouter=require('../reviewRoute/review')
 // Re-route into other resourse router
 router.use('/:bootcampId/courses',courseRouter)
+router.use('/:bootcampId/reviews',reviewRouter)
 
 // Advanced filter 'select', 'sort', 'page', 'limit'
 const Bootcamp = require('../../models/bootcamps')
