@@ -10,13 +10,13 @@ dotenv.config();
 const Bootcamp = require('./models/bootcamps');
 const Course = require('./models/course');
 const User = require('./models/User');
-// const Review = require('./models/Review');
+const Review = require('./models/Review');
 
 // Read JSON files
 const bootcamps = require('./_data/bootcamps.json');
 const courses = require('./_data/courses.json');
 const users = require('./_data/users.json');
-// const reviews = require('./_data/reviews.json');
+const reviews = require('./_data/reviews.json');
 
 // Connect to DB
 connectDB();
@@ -27,11 +27,12 @@ const importData = async () => {
     await Bootcamp.deleteMany();
     await Course.deleteMany();
     await User.deleteMany();
-    // await Review.deleteMany();
+    await Review.deleteMany();
 
     await Bootcamp.insertMany(bootcamps);
     await Course.insertMany(courses);
     await User.insertMany(users);
+    await Review.insertMany(reviews);
 
     console.log('Data Imported!');
     process.exit();
@@ -47,7 +48,7 @@ const destroyData = async () => {
     await Bootcamp.deleteMany();
     await Course.deleteMany();
     await User.deleteMany();
-    // await Review.deleteMany();
+    await Review.deleteMany();
 
     console.log('Data Destroyed!');
     process.exit();

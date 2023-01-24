@@ -9,7 +9,7 @@ const Review = require('../models/review');
 exports.getReviews = asyncHandler(async (req, res, next) => {
   if (req.params.bootcampId) {
     // Get review For Bootcamp
-    const reviews = Review.find({ bootcamp: req.params.bootcampId });
+    const reviews = await Review.find({ bootcamp: req.params.bootcampId });
 
     res.status(200).json({
       success: true,
@@ -20,4 +20,23 @@ exports.getReviews = asyncHandler(async (req, res, next) => {
     // select specific fields
     res.status(200).json(res.advancedResults);
   }
+});
+
+// @desc    Get single review
+// @route   GET /review/:id
+// @acess   Public
+exports.getReview = asyncHandler(async (req, res, next) => {
+    const review = await Review.findById(req.params.id)
+    
+  if (!review) {
+    return next(
+      new ErrorResponse(`No review found with the id of ${req.params.id}`,404),
+    );
+  }
+
+  res.status(200).json({
+    success: true,
+    count: review.length,
+    data: review,
+  });
 });
