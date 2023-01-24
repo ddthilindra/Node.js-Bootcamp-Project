@@ -2,6 +2,7 @@ const User = require('../models/user');
 const asyncHandler = require('../middleware/async');
 const ErrorResponse = require('../utils/errorResponse');
 const sendEmail = require('../utils/sendEmail');
+const crypto = require('crypto');
 
 // @desc    Register user
 // @route   POST /auth/register
@@ -95,7 +96,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   // Create reset url
   const resetUrl = `${req.protocol}://${req.get(
     'host'
-  )}/api/v1/auth/resetpassword/${resetToken}`;
+  )}/user/resetpassword/${resetToken}`;
 
   const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
 
@@ -123,25 +124,30 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   });
 });
 
-// Get token from model, create cookie and send response
-// const sendTokenResponse = (user, statusCode, res) => {
-//   // Create token
-//   const token = user.getSignedJwtToken();
+// @desc    Reset password
+// @route   PUT /user/resetpassword/:iresettoken
+// @acess   Private
+exports.resetPassword = asyncHandler(async (req, res, next) => {
+  // Get hashed token
+  const resetPasswordToken = crypto
+    .createHash('sha256')
+    .update(req.params.resettoken)
+    .digest('hex');
 
-//   const options = {
-//     expires: new Date(
-//       Date.now() + process.env.JWT_COOKIE_EXPIRE * 24 * 60 * 60 * 1000
-//     ),
-//     httpOnly: true,
-//   };
+  const user = await User.findOne({
+    resetPasswordToken,
+    resetPasswordExpire: { $gt: Date.now() },
+  });
 
-//   // Cookie secure ture for httpS
-//   if (process.env.NODE_ENV === 'production') {
-//     options.secure = true;
-//   }
+  if(!user){
+    return next(new ErrorResponse('Invalid token', 400));
+  }
 
-//   res
-//     .status(statusCode)
-//     .cookie('token', token, options)
-//     .json({ success: true, token });
-// };
+  // Set the new password
+  user.password=req.body.password
+  user.resetPasswordToken=undefined
+  user.resetPasswordExpire=undefined
+  await user.save()
+
+  sendTokenResponse(user, 200, res);
+});
