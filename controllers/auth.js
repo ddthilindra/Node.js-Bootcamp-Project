@@ -66,6 +66,21 @@ const sendTokenResponse = (user, statusCode, res) => {
     .json({ success: true, token });
 };
 
+// @desc    Log user out / clear cookie
+// @route   GET /auth/logout
+// @acess   Private
+exports.logout = asyncHandler(async (req, res, next) => {
+  res.cookie('token', 'none', {
+    expires: new Date(Date.now() + 10 * 1000), // 10min
+    httpOnly: true,
+  });
+
+  res.status(200).json({
+    success: true,
+    data: {},
+  });
+});
+
 // @desc    Get current login user
 // @route   POST /auth/me
 // @acess   Private
@@ -103,7 +118,7 @@ exports.updateDetails = asyncHandler(async (req, res, next) => {
 exports.updatePassword = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user.id).select('+password');
 
-  console.log(user)
+  console.log(user);
   // Check current password
   if (!(await user.matchPassword(req.body.currentPassword))) {
     return next(new ErrorResponse('Password is incurrect', 401));
