@@ -4,6 +4,8 @@ const ErrorResponse = require('../utils/errorResponse');
 const sendEmail = require('../utils/sendEmail');
 const crypto = require('crypto');
 
+// ########### USERS CRUD / NOT ADMIN RELATED ###########
+
 // @desc    Register user
 // @route   POST /auth/register
 // @acess   Public
@@ -14,7 +16,7 @@ exports.register = asyncHandler(async (req, res, next) => {
 });
 
 // @desc    Login user
-// @route   POST /user/login
+// @route   POST /auth/login
 // @acess   Public
 exports.login = asyncHandler(async (req, res, next) => {
   const { email, password } = req.body;
@@ -65,7 +67,7 @@ const sendTokenResponse = (user, statusCode, res) => {
 };
 
 // @desc    Get current login user
-// @route   POST /user/me
+// @route   POST /auth/me
 // @acess   Private
 exports.getMe = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user.id);
@@ -77,7 +79,7 @@ exports.getMe = asyncHandler(async (req, res, next) => {
 });
 
 // @desc    Update user details
-// @route   PUT /user/updatedetails
+// @route   PUT /auth/updatedetails
 // @acess   Private
 exports.updateDetails = asyncHandler(async (req, res, next) => {
   const fieldsToUpdate = {
@@ -96,7 +98,7 @@ exports.updateDetails = asyncHandler(async (req, res, next) => {
 });
 
 // @desc    Update password | current password & new password
-// @route   POST /user/updatepassword
+// @route   POST /auth/updatepassword
 // @acess   Private
 exports.updatePassword = asyncHandler(async (req, res, next) => {
   const user = await User.findById(req.user.id).select('+password');
@@ -114,7 +116,7 @@ exports.updatePassword = asyncHandler(async (req, res, next) => {
 });
 
 // @desc    Forgot password
-// @route   POST /user/forgotpassword
+// @route   POST /auth/forgotpassword
 // @acess   Public
 exports.forgotPassword = asyncHandler(async (req, res, next) => {
   const user = await User.findOne({ email: req.body.email });
@@ -133,7 +135,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
   // Create reset url
   const resetUrl = `${req.protocol}://${req.get(
     'host'
-  )}/user/resetpassword/${resetToken}`;
+  )}/auth/resetpassword/${resetToken}`;
 
   const message = `You are receiving this email because you (or someone else) has requested the reset of a password. Please make a PUT request to: \n\n ${resetUrl}`;
 
@@ -162,7 +164,7 @@ exports.forgotPassword = asyncHandler(async (req, res, next) => {
 });
 
 // @desc    Reset password
-// @route   PUT /user/resetpassword/:iresettoken
+// @route   PUT /auth/resetpassword/:iresettoken
 // @acess   Private
 exports.resetPassword = asyncHandler(async (req, res, next) => {
   // Get hashed token
