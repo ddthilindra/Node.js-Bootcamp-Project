@@ -84,5 +84,3 @@ This is a project that builds an extensive, in-depth backend API for bootcamp di
 - Security: NoSQL Injection, XSS, etc
 - Creating Documentation
 - Deployment With Heroku
-
- [Courses Link 🚀](https://www.udemy.com/course/nodejs-api-masterclass/learn/)
